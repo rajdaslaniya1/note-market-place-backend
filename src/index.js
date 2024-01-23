@@ -12,14 +12,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Router
-// const routes = require("./src/router");
+const routes = require("./router");
 
-// app.use(routes);
+app.use(routes);
 
 // middleware
-// const notFoundMiddleware = require("./src/middleware/not-found");
+const notFoundMiddleware = require("./middleware/not-found");
 
-// app.use(notFoundMiddleware);
+app.use(notFoundMiddleware);
 
 const connection = async () => {
   try {
