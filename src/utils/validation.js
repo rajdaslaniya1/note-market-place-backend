@@ -35,9 +35,27 @@ const forgotPasswordSchema = Joi.object({
   email: Joi.string().email().required(),
 });
 
+const changePasswordSchema = Joi.object({
+  password: Joi.string()
+    .pattern(
+      new RegExp(
+        /^(?=.*[a-z])(?=.*[!@#$%^&*()_+{}[\]|;:,.<>?])(?=.*\d)(?!\s).{6,24}$/
+      )
+    )
+    .required(),
+  newPassword: Joi.string()
+    .pattern(
+      new RegExp(
+        /^(?=.*[a-z])(?=.*[!@#$%^&*()_+{}[\]|;:,.<>?])(?=.*\d)(?!\s).{6,24}$/
+      )
+    )
+    .required(),
+});
+
 module.exports = {
   signUpSchema,
   loginSchema,
   otpVerifySchema,
   forgotPasswordSchema,
+  changePasswordSchema,
 };

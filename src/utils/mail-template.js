@@ -19,7 +19,13 @@ const sendForgotPasswordMail = async (
     from: process.env.SYSTEM_EMAIL,
     to: toSendUserEmail,
     subject: "New Temporary Password has been created for you",
-    html: `Hello, </br> </br> We have generated a new password for you Password: ${newGeneratedPassword} </br> </br> Regards,</br>  Notes Marketplace`,
+    html: `<p>Hello,</p> 
+    </br> </br>
+    <p>We have generated a new password for you Password: ${newGeneratedPassword} </p>
+    </br> </br> 
+    <p>Regards,</p>
+    </br>  
+    <p>Notes Marketplace</p>`,
   };
 
   // Send email

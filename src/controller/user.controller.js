@@ -10,6 +10,7 @@ const {
   signUpSchema,
   loginSchema,
   forgotPasswordSchema,
+  changePasswordSchema,
 } = require("../utils/validation");
 
 const sequelize = require("sequelize");
@@ -135,7 +136,6 @@ const forgotPassword = async (req, res) => {
           },
         }
       );
-      console.log("----", generatedPassword, "----");
       await sendForgotPasswordMail(email, generatedPassword);
       return sendSuccessResponse(
         res,
@@ -150,4 +150,43 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-module.exports = { signUpUserMember, loginUser, forgotPassword };
+const changePassword = async (req, res) => {
+  try {
+    const { user_id, email } = req.headers;
+    const { error } = changePasswordSchema.validate(req.body);
+    if (error) {
+      return sendErrorResponse(res, error.details[0].message, 400);
+    }
+    const { password, newPassword } = req.body;
+    const findUser = await Users.findOne({ where: { id: user_id } });
+    console.log(findUser.password, password);
+    if (findUser) {
+      const isMatch = await passwordCompare(password, findUser.password);
+      console.log(isMatch, "IsMatch");
+      if (isMatch) {
+        const newHashPassword = await passwordHashing(newPassword);
+        await Users.update(
+          { password: newHashPassword },
+          { where: { id: user_id } }
+        );
+        return sendSuccessResponse(
+          res,
+          null,
+          "User password successfully updated"
+        );
+      }
+      return sendErrorResponse(res, "You have entered wrong password", 400);
+    }
+    return sendErrorResponse(res, "User is nor present", 404);
+  } catch (error) {
+    console.log("changePassword-error", error);
+    return sendErrorResponse(res, "Interval server error", 500);
+  }
+};
+
+module.exports = {
+  signUpUserMember,
+  loginUser,
+  forgotPassword,
+  changePassword,
+};
