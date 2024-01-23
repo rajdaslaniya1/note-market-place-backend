@@ -197,9 +197,35 @@ const changePassword = async (req, res) => {
   }
 };
 
+const emailVerify = async (req, res) => {
+  try {
+    const { email } = req.params;
+    const findUser = await Users.findOne({ where: { email } });
+    if (findUser) {
+      const updatedUser = await Users.update(
+        { isEmailVerify: true },
+        {
+          where: {
+            email,
+          },
+        }
+      );
+      console.log(updatedUser[0] > 0);
+      if (updatedUser[0] > 0) {
+        return sendSuccessResponse(res, null, "Email is verified successfully");
+      }
+    }
+    return sendErrorResponse(res, "Invalid email address", 400);
+  } catch (error) {
+    console.log("emailVerify-error", error);
+    return sendErrorResponse(res, "Interval server error", 500);
+  }
+};
+
 module.exports = {
   signUpUserMember,
   loginUser,
   forgotPassword,
   changePassword,
+  emailVerify,
 };
