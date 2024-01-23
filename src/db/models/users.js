@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       createdBy: {
         type: DataTypes.INTEGER,
       },
+      isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
       updatedBy: {
         type: DataTypes.INTEGER,
       },

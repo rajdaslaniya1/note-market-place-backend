@@ -45,22 +45,30 @@ const generatePassword = () => {
     return characters.charAt(randomIndex);
   };
 
-  // Ensure at least one character from each set
-  const password = [
-    getRandomChar(lowercaseChars),
-    getRandomChar(specialChars),
-    getRandomChar(digitChars),
-  ];
+  const passwordLength = Math.floor(Math.random() * (24 - 6 + 1)) + 6;
+  let password = "";
+
+  // Ensure at least one lowercase character
+  password += getRandomChar(lowercaseChars);
+
+  // Ensure at least one special character
+  password += getRandomChar(specialChars);
+
+  // Ensure at least one digit character
+  password += getRandomChar(digitChars);
 
   // Fill the rest of the password with random characters
-  for (let i = password.length; i < 6; i++) {
-    password.push(getRandomChar(allChars));
+  for (let i = 0; i < passwordLength - 3; i++) {
+    password += getRandomChar(allChars);
   }
 
   // Shuffle the characters to make the password more random
-  const shuffledPassword = password.sort(() => Math.random() - 0.5).join("");
+  password = password
+    .split("")
+    .sort(() => Math.random() - 0.5)
+    .join("");
 
-  return shuffledPassword;
+  return password;
 };
 
 module.exports = {

@@ -7,7 +7,9 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "migration:up": "sequelize-cli db:migrate",
-    "migration:down": "sequelize-cli db:migrate:undo"
+    "migration:down": "sequelize-cli db:migrate:undo",
+    "seeds:up": "sequelize-cli db:seed:all",
+    "seeds:down": "sequelize-cli db:seed:undo"
   },
   "keywords": [],
   "author": "",

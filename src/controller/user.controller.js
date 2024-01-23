@@ -4,7 +4,10 @@ const {
   createToken,
   generatePassword,
 } = require("../utils/common");
-const { sendForgotPasswordMail } = require("../utils/mail-template");
+const {
+  sendForgotPasswordMail,
+  sendVerificationMail,
+} = require("../utils/mail-template");
 const { sendSuccessResponse, sendErrorResponse } = require("../utils/response");
 const {
   signUpSchema,
@@ -46,6 +49,8 @@ const signUpUserMember = async (req, res) => {
       roleId: roleId.id,
     });
 
+    await sendVerificationMail(email, firstName);
+
     return sendSuccessResponse(
       res,
       {
@@ -54,7 +59,7 @@ const signUpUserMember = async (req, res) => {
         lastName: user.lastName,
         email: user.email,
       },
-      "Success fully created user"
+      "Please verify your email. you received link via mail"
     );
   } catch (error) {
     console.log("signUpUserMember-error", error);
@@ -73,13 +78,14 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     const userEmail = await Users.findOne({
-      where: { email },
+      where: { email, isActive: true },
       attributes: [
         "id",
         "firstName",
         "lastName",
         "password",
         "email",
+        "isEmailVerify",
         [sequelize.literal('"user_roles"."id"'), "roleId"],
         [sequelize.literal('"user_roles"."name"'), "name"],
       ],
@@ -93,6 +99,13 @@ const loginUser = async (req, res) => {
 
     if (userEmail) {
       const isMatch = await passwordCompare(password, userEmail.password);
+      if (!userEmail.isEmailVerify) {
+        return sendErrorResponse(
+          res,
+          "Please verify your email before login",
+          400
+        );
+      }
       if (isMatch) {
         const token = createToken(userEmail.id, userEmail.email);
         return sendSuccessResponse(
@@ -152,7 +165,7 @@ const forgotPassword = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { user_id, email } = req.headers;
+    const { user_id } = req.headers;
     const { error } = changePasswordSchema.validate(req.body);
     if (error) {
       return sendErrorResponse(res, error.details[0].message, 400);
