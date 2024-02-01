@@ -3,7 +3,7 @@ const { Model } = require("sequelize");
 
 const Users = require("./index").Users;
 module.exports = (sequelize, DataTypes) => {
-  class Genders extends Model {
+  class RefData extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -20,10 +20,11 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  Genders.init(
+  RefData.init(
     {
-      name: { type: DataTypes.STRING, allowNull: false },
-      description: { type: DataTypes.STRING },
+      value: { type: DataTypes.STRING, allowNull: false },
+      dataValue: { type: DataTypes.STRING, allowNull: false },
+      refCategory: { type: DataTypes.STRING, allowNull: false },
       isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
       createdBy: {
         type: DataTypes.INTEGER,
@@ -44,8 +45,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Genders",
+      modelName: "RefData",
     }
   );
-  return Genders;
+  return RefData;
 };

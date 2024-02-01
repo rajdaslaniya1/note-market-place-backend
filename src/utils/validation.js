@@ -57,6 +57,12 @@ const createCountrySchema = Joi.object({
   countryCode: Joi.string().required(),
 });
 
+const createRefDataSchema = Joi.object({
+  value: Joi.string().required(),
+  dataValue: Joi.string().required(),
+  refCategory: Joi.string().required(),
+});
+
 module.exports = {
   signUpSchema,
   loginSchema,
@@ -64,4 +70,5 @@ module.exports = {
   forgotPasswordSchema,
   changePasswordSchema,
   createCountrySchema,
+  createRefDataSchema,
 };

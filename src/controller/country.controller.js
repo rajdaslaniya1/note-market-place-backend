@@ -99,7 +99,7 @@ const updateCountry = async (req, res) => {
       "Country record updated successfully"
     );
   } catch (error) {
-    console.log("deleteCountry-error", error);
+    console.log("updateCountry-error", error);
     return sendErrorResponse(res, "Interval server error", 500);
   }
 };
