@@ -52,10 +52,16 @@ const changePasswordSchema = Joi.object({
     .required(),
 });
 
+const createCountrySchema = Joi.object({
+  name: Joi.string().required(),
+  countryCode: Joi.string().required(),
+});
+
 module.exports = {
   signUpSchema,
   loginSchema,
   otpVerifySchema,
   forgotPasswordSchema,
   changePasswordSchema,
+  createCountrySchema,
 };
