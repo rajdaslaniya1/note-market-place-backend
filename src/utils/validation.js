@@ -63,6 +63,11 @@ const createRefDataSchema = Joi.object({
   refCategory: Joi.string().required(),
 });
 
+const createNotesCategoriesSchema = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+});
+
 module.exports = {
   signUpSchema,
   loginSchema,
@@ -71,4 +76,5 @@ module.exports = {
   changePasswordSchema,
   createCountrySchema,
   createRefDataSchema,
+  createNotesCategoriesSchema,
 };

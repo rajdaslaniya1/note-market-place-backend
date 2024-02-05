@@ -19,6 +19,7 @@ const userAuthenticate = async (req, res, next) => {
     if (user) {
       req.headers.user_id = user.id;
       req.headers.email = user.email;
+      req.headers.roleId = user.roleId;
       return next();
     }
   } catch (error) {
@@ -30,4 +31,21 @@ const userAuthenticate = async (req, res, next) => {
   }
 };
 
-module.exports = { userAuthenticate };
+const roleAdminAuthenticate = async (req, res, next) => {
+  try {
+    const { roleId } = req.headers;
+    console.log(roleId);
+    if (roleId === 1 || roleId === 2) {
+      return next();
+    }
+    new throwError();
+  } catch (error) {
+    return sendErrorResponse(
+      res,
+      "Unauthorized user for perform this task",
+      409
+    );
+  }
+};
+
+module.exports = { userAuthenticate, roleAdminAuthenticate };

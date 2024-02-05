@@ -1,7 +1,6 @@
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/response");
 const { createRefDataSchema } = require("../utils/validation");
 const RefData = require("../db/models/index").RefData;
-const { Op } = require("sequelize");
 
 const getRefData = async (req, res) => {
   try {
@@ -93,9 +92,27 @@ const updateRefData = async (req, res) => {
   }
 };
 
+const getSingleRefData = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return sendErrorResponse(res, "Please passed id", 404);
+    }
+    const data = await RefData.findOne({ where: { id } });
+    if (!data) {
+      return sendErrorResponse(res, "No record found in database", 404);
+    }
+    return sendSuccessResponse(res, data, "RefData record");
+  } catch (error) {
+    console.log("getSingleRefData-error", error);
+    return sendErrorResponse(res, "Interval server error", 500);
+  }
+};
+
 module.exports = {
   getRefData,
   createRefData,
   deleteRefData,
   updateRefData,
+  getSingleRefData,
 };
