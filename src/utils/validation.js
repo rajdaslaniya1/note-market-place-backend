@@ -1,6 +1,7 @@
 // validation.js
 
 const Joi = require("joi");
+const { SystemConfigurationsKey } = require("./common");
 
 const signUpSchema = Joi.object({
   firstName: Joi.string().alphanum().max(30).required(),
@@ -68,6 +69,22 @@ const createNotesCategoriesSchema = Joi.object({
   description: Joi.string().required(),
 });
 
+const createNotesTypesSchema = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+});
+
+const allowedKeys = Object.keys(SystemConfigurationsKey);
+
+const createSystemConfigurationSchema = Joi.array().items(
+  Joi.object({
+    dataKey: Joi.string()
+      .valid(...allowedKeys)
+      .required(),
+    dataValue: Joi.string().required(),
+  })
+);
+
 module.exports = {
   signUpSchema,
   loginSchema,
@@ -77,4 +94,6 @@ module.exports = {
   createCountrySchema,
   createRefDataSchema,
   createNotesCategoriesSchema,
+  createNotesTypesSchema,
+  createSystemConfigurationSchema,
 };

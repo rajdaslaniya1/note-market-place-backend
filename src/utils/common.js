@@ -71,6 +71,17 @@ const generatePassword = () => {
   return password;
 };
 
+const SystemConfigurationsKey = {
+  SupportEmailAddress: "SupportEmailAddress",
+  SupportPhoneNumber: "SupportPhoneNumber",
+  EmailAddressForNotify: "EmailAddressForNotify",
+  DefaultNoteDisplayPicture: "DefaultNoteDisplayPicture",
+  DefaultMemberDisplayPicture: "DefaultMemberDisplayPicture",
+  TwitterUrl: "TwitterUrl",
+  FacebookUrl: "FacebookUrl",
+  LinkedInUrl: "LinkedInUrl",
+};
+
 module.exports = {
   passwordHashing,
   passwordCompare,
@@ -79,4 +90,5 @@ module.exports = {
   generateOTP,
   isOtpExpired,
   generatePassword,
+  SystemConfigurationsKey,
 };

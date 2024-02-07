@@ -48,4 +48,25 @@ const roleAdminAuthenticate = async (req, res, next) => {
   }
 };
 
-module.exports = { userAuthenticate, roleAdminAuthenticate };
+const roleSuperAdminAuthenticate = async (req, res, next) => {
+  try {
+    const { roleId } = req.headers;
+    console.log(roleId);
+    if (roleId === 1) {
+      return next();
+    }
+    new throwError();
+  } catch (error) {
+    return sendErrorResponse(
+      res,
+      "Unauthorized user for perform this task",
+      409
+    );
+  }
+};
+
+module.exports = {
+  userAuthenticate,
+  roleAdminAuthenticate,
+  roleSuperAdminAuthenticate,
+};

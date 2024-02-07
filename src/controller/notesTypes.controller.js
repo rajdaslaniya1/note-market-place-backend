@@ -1,12 +1,12 @@
 const { sendErrorResponse, sendSuccessResponse } = require("../utils/response");
-const { createNotesCategoriesSchema } = require("../utils/validation");
-const NotesCategories = require("../db/models/index").NotesCategories;
+const { createNotesTypesSchema } = require("../utils/validation");
+const NotesTypes = require("../db/models/index").NotesTypes;
 const Users = require("../db/models/index").Users;
 const { literal } = require("sequelize");
 
-const getNotesCategories = async (req, res) => {
+const getNotesTypes = async (req, res) => {
   try {
-    const data = await NotesCategories.findAll({
+    const data = await NotesTypes.findAll({
       attributes: [
         "id",
         "name",
@@ -23,121 +23,113 @@ const getNotesCategories = async (req, res) => {
         attributes: [],
       },
     });
-    return sendSuccessResponse(res, data, "NotesCategories list");
+    return sendSuccessResponse(res, data, "NotesType list ");
   } catch (error) {
-    console.log("getNotesCategories-error", error);
+    console.log("getNotesTypes-error", error);
     return sendErrorResponse(res, "Interval server error", 500);
   }
 };
 
-const createNotesCategories = async (req, res) => {
+const createNoteTypes = async (req, res) => {
   try {
-    const { error } = createNotesCategoriesSchema.validate(req.body);
+    const { error } = createNotesTypesSchema.validate(req.body);
     if (error) {
       return sendErrorResponse(res, error.details[0].message, 400);
     }
 
     const { name, description } = req.body;
 
-    const data = await NotesCategories.create({
+    const data = await NotesTypes.create({
       name,
       description,
       createdBy: req.headers.user_id,
       updatedBy: req.headers.user_id,
     });
-    return sendSuccessResponse(
-      res,
-      data,
-      "NotesCategories created successfully"
-    );
+    return sendSuccessResponse(res, data, "NotesTypes created successfully");
   } catch (error) {
-    console.log("createNotesCategories-error", error);
+    console.log("createNoteTypes-error", error);
     return sendErrorResponse(res, "Interval server error", 500);
   }
 };
 
-const deleteNotesCategories = async (req, res) => {
+const deleteNotesTypes = async (req, res) => {
   try {
     const { id } = req.params;
     const { user_id } = req.headers;
     if (!id) {
       return sendErrorResponse(res, "Please passed id", 404);
     }
-    const findNotesCategories = await NotesCategories.findOne({
+    const findNotesTypes = await NotesTypes.findOne({
       where: { id, isActive: true },
     });
-    if (!findNotesCategories) {
+    if (!findNotesTypes) {
       return sendErrorResponse(res, "Record is not present in database", 404);
     }
-    await NotesCategories.update(
+    await NotesTypes.update(
       { isActive: false, updatedBy: user_id },
       { where: { id } }
     );
-    return sendSuccessResponse(
-      res,
-      null,
-      "NotesCategories is deleted successfully"
-    );
+    return sendSuccessResponse(res, null, "NotesTypes is deleted successfully");
   } catch (error) {
-    console.log("deleteNotesCategories-error", error);
+    console.log("deleteNotesTypes-error", error);
     return sendErrorResponse(res, "Interval server error", 500);
   }
 };
 
-const updateNotesCategories = async (req, res) => {
+const updateNotesTypes = async (req, res) => {
   try {
     const { id } = req.params;
     const { user_id } = req.headers;
     if (!id) {
       return sendErrorResponse(res, "Please passed id", 404);
     }
-    const { error } = createNotesCategoriesSchema.validate(req.body);
+    const { error } = createNotesTypesSchema.validate(req.body);
     if (error) {
       return sendErrorResponse(res, error.details[0].message, 400);
     }
-    const findNotesCategories = await NotesCategories.findOne({
+    const findNotesTypes = await NotesTypes.findOne({
       where: { id },
     });
-    if (!findNotesCategories) {
+    if (!findNotesTypes) {
       return sendErrorResponse(res, "Record is not present in database", 404);
     }
     const { name, description } = req.body;
-    await NotesCategories.update(
+    await NotesTypes.update(
       { name, description, updatedBy: user_id, isActive: true },
       { where: { id } }
     );
     return sendSuccessResponse(
       res,
       null,
-      "NotesCategories record updated successfully"
+      "NotesTypes record updated successfully"
     );
   } catch (error) {
-    console.log("updateNotesCategories-error", error);
+    console.log("updateNotesTypes-error", error);
     return sendErrorResponse(res, "Interval server error", 500);
   }
 };
 
-const getSingleNotesCategories = async (req, res) => {
+const getSingleNotesTypes = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
       return sendErrorResponse(res, "Please passed id", 404);
     }
-    const data = await NotesCategories.findOne({ where: { id } });
+    const data = await NotesTypes.findOne({ where: { id } });
     if (!data) {
       return sendErrorResponse(res, "No record found in database", 404);
     }
-    return sendSuccessResponse(res, data, "NotesCategories record");
+    return sendSuccessResponse(res, data, "NotesTypes record");
   } catch (error) {
-    console.log("getSingleNotesCategories-error", error);
+    console.log("getSingleNotesTypes-error", error);
     return sendErrorResponse(res, "Interval server error", 500);
   }
 };
 
 module.exports = {
-  getNotesCategories,
-  createNotesCategories,
-  deleteNotesCategories,
-  updateNotesCategories,
-  getSingleNotesCategories,
+  getNotesTypes,
+  createNoteTypes,
+  deleteNotesTypes,
+  updateNotesTypes,
+  getSingleNotesTypes,
 };
