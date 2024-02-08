@@ -34,7 +34,7 @@ module.exports = {
         },
         where: {
           refCategory: "Gender",
-          isActive: 1,
+          isActive: true,
         },
         onUpdate: "cascade",
         onDelete: "cascade",
@@ -49,7 +49,6 @@ module.exports = {
       },
       profilePicture: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       address1: {
         type: Sequelize.STRING,
@@ -75,7 +74,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: "Country",
+            tableName: "Countries",
           },
           key: "id",
         },

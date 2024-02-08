@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const { RefDataValue } = require("../../utils/common");
 const Users = require("./index").Users;
 const RefData = require("./index").RefData;
 const Country = require("./index").Country;
@@ -25,11 +26,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         as: "user_details",
       });
-      this.genderAssociation = this.belongsTo(models.Users, {
+      this.genderAssociation = this.belongsTo(models.RefData, {
         foreignKey: "genderId",
         as: "gender_details",
       });
-      this.countryAssociation = this.belongsTo(models.Users, {
+      this.countryAssociation = this.belongsTo(models.Country, {
         foreignKey: "countryId",
         as: "country_details",
       });
@@ -57,8 +58,8 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
         where: {
-          refCategory: "Gender",
-          isActive: 1,
+          refCategory: RefDataValue.Gender,
+          isActive: true,
         },
         onUpdate: "cascade",
         onDelete: "cascade",
@@ -73,7 +74,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       profilePicture: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
       address1: {
         type: DataTypes.STRING,

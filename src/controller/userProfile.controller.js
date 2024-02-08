@@ -49,11 +49,14 @@ const createOrUpdateUserProfile = async (req, res) => {
     if (error) {
       return sendErrorResponse(res, error.details[0].message, 400);
     }
-    const timestamp = Date.now();
-    const name = profilePicture.originalname.split(".")[0];
-    const type = profilePicture.originalname.split(".")[1];
-    const fileName = `profile_picture/${user_id}_${name}_${timestamp}.${type}`;
-    const imageUrl = await uploadImageToFireBase(profilePicture, fileName);
+    let imageUrl = "";
+    if (profilePicture) {
+      const timestamp = Date.now();
+      const name = profilePicture.originalname.split(".")[0];
+      const type = profilePicture.originalname.split(".")[1];
+      const fileName = `profile_picture/${user_id}_${name}_${timestamp}.${type}`;
+      imageUrl = await uploadImageToFireBase(profilePicture, fileName);
+    }
     await Users.update(
       {
         firstName,
@@ -78,7 +81,8 @@ const createOrUpdateUserProfile = async (req, res) => {
           address2,
           university,
           phoneNumber,
-          profilePicture: imageUrl,
+          profilePicture:
+            imageUrl !== "" ? imageUrl : userProfile.profilePicture,
           city,
           updatedBy: user_id,
         },
@@ -114,7 +118,7 @@ const createOrUpdateUserProfile = async (req, res) => {
         dob,
         genderId,
         phoneNumber,
-        profilePicture: imageUrl,
+        profilePicture: imageUrl ?? null,
         address1,
         address2,
         city,
