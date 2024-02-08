@@ -6,6 +6,7 @@ const refDataRouter = require("./refData.router");
 const notesCategories = require("./notesCategories.router");
 const notesTypes = require("./notesTypes.router");
 const systemConfiguration = require("./systemConfiguration.router");
+const userProfile = require("./userProfile.router");
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use("/v1", refDataRouter);
 router.use("/v1", notesCategories);
 router.use("/v1", notesTypes);
 router.use("/v1", systemConfiguration);
+router.use("/v1", userProfile);
 
 module.exports = router;

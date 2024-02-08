@@ -1,5 +1,10 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const config = require("../firebase/config");
+const firebaseApp = require("firebase/app");
+const firebaseStorage = require("firebase/storage");
+firebaseApp.initializeApp(config.firebaseConfig);
+const storage = firebaseStorage.getStorage();
 
 const passwordHashing = async (password) => {
   const salt = await bcrypt.genSalt(10);
@@ -82,6 +87,26 @@ const SystemConfigurationsKey = {
   LinkedInUrl: "LinkedInUrl",
 };
 
+// Initialize Cloud Storage and get a reference to the service
+const uploadImageToFireBase = async (file, file_path) => {
+  try {
+    const storageRef = firebaseStorage.ref(storage, file_path);
+    const metadata = {
+      contentType: file.mimetype,
+    };
+
+    const snapshot = await firebaseStorage.uploadBytesResumable(
+      storageRef,
+      file.buffer,
+      metadata
+    );
+    return firebaseStorage.getDownloadURL(snapshot.ref);
+  } catch (error) {
+    console.log("uploadImageToFireBase-error", error);
+    return error;
+  }
+};
+
 module.exports = {
   passwordHashing,
   passwordCompare,
@@ -91,4 +116,5 @@ module.exports = {
   isOtpExpired,
   generatePassword,
   SystemConfigurationsKey,
+  uploadImageToFireBase,
 };

@@ -85,6 +85,35 @@ const createSystemConfigurationSchema = Joi.array().items(
   })
 );
 
+const createOrUpdateUserProfileSchema = Joi.object({
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
+  dob: Joi.date().max(new Date()),
+  email: Joi.string().email().required(),
+  genderId: Joi.number().required(),
+  phoneNumber: Joi.string()
+    .pattern(new RegExp(/^[6-9]\d{9}$/))
+    .required(),
+  profilePicture: Joi.object({
+    buffer: Joi.binary().required(),
+    mimetype: Joi.string()
+      .valid("image/jpeg", "image/png", "image/gif")
+      .required(),
+    fieldname: Joi.string(),
+    originalname: Joi.string(),
+    encoding: Joi.string(),
+    size: Joi.number(),
+  }),
+  address1: Joi.string().required(),
+  address2: Joi.string().required(),
+  city: Joi.string().required(),
+  state: Joi.string().required(),
+  countryId: Joi.number().required(),
+  zipCode: Joi.string().required(),
+  university: Joi.string(),
+  college: Joi.string(),
+});
+
 module.exports = {
   signUpSchema,
   loginSchema,
@@ -96,4 +125,5 @@ module.exports = {
   createNotesCategoriesSchema,
   createNotesTypesSchema,
   createSystemConfigurationSchema,
+  createOrUpdateUserProfileSchema,
 };

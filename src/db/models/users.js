@@ -1,6 +1,5 @@
 "use strict";
 const { Model } = require("sequelize");
-const Users = require("./index").Users;
 const UserRoles = require("./index").UserRoles;
 
 module.exports = (sequelize, DataTypes) => {
@@ -23,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       roleId: {
         type: DataTypes.INTEGER,
         references: {
-          model: Users,
+          model: UserRoles,
           key: "id",
         },
         allowNull: false,
